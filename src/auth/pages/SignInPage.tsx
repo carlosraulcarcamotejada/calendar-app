@@ -10,15 +10,12 @@ import { AuthLayout, SignInValues } from "../";
 import { FormikProps, useFormik } from "formik";
 import { Link as RouterLink } from "react-router-dom";
 
-
-const initialValues:SignInValues = {
+const initialValues: SignInValues = {
   email: "",
   password: "",
 };
 
 export const SignInPage: FC = (): JSX.Element => {
-
-
   const onSubmit = (values: SignInValues) => {
     console.log(values);
     formik.resetForm();
@@ -30,13 +27,13 @@ export const SignInPage: FC = (): JSX.Element => {
   });
 
   return (
-    <AuthLayout title="Sign in">
+    <AuthLayout title="Ingreso">
       <Box component="form" onSubmit={formik.handleSubmit} noValidate>
         <TextField
           margin="normal"
           required
           fullWidth
-          label="Email Address"
+          label="Correo Electrónico"
           name="email"
           value={formik.values.email}
           onChange={formik.handleChange}
@@ -50,7 +47,7 @@ export const SignInPage: FC = (): JSX.Element => {
           name="password"
           value={formik.values.password}
           onChange={formik.handleChange}
-          label="Password"
+          label="Contraseña"
           type="password"
           autoComplete="current-password"
         />
@@ -64,7 +61,7 @@ export const SignInPage: FC = (): JSX.Element => {
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
         >
-          Sign In
+          Iniciar sesion
         </Button>
         <Grid container>
           <Grid item xs display="none">
@@ -74,7 +71,7 @@ export const SignInPage: FC = (): JSX.Element => {
           </Grid>
           <Grid item>
             <Link component={RouterLink} to="/auth/signup" variant="body2">
-              Don't have an account? Sign Up
+              ¿No tienes una cuenta? Inscribirse
             </Link>
           </Grid>
         </Grid>

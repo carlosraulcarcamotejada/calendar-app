@@ -57,11 +57,11 @@ export const CalendarPage: FC = (): JSX.Element => {
 
 
   const onDoubleClick = (event: any) => {
-    console.log({ doubleClick: event });
+    //console.log({ doubleClick: event });
   };
 
   const onSelec = (event: any) => {
-    console.log({ click: event });
+    //console.log({ click: event });
     setIsOpen(true);
   };
 
