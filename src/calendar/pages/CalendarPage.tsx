@@ -1,24 +1,12 @@
 import { FC, useState } from "react";
 import { Calendar } from "react-big-calendar";
-import { addHours } from "date-fns";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+// import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Box, Toolbar } from "@mui/material";
 import { localizer, getMessagesEs } from "../../helpers";
-import { NavBar, CalendarEvent, CalendarModal } from "..";
+import { NavBar, CalendarModal, Fab, CalendarEvent as CalendarEventComp } from "..";
+import { useCalendarStore, useUiStore } from "../../hooks";
+import { CalendarEvent } from "../../store/calendar/calendarSlice";
 
-const events = [
-  {
-    title: "Cumpleaños del jefe",
-    notes: "Hay que comprar el pastel",
-    start: new Date(),
-    end: addHours(new Date(), 2),
-    bgColor: "#fafafa",
-    user: {
-      _id: 123,
-      name: "Carlos",
-    },
-  },
-];
 
 type StyleProps = {
   title: string;
@@ -45,30 +33,28 @@ const eventStyleGetter = (e: StyleProps) => {
 type View = "agenda" | "day" | "month" | "week" | "work_week";
 
 export const CalendarPage: FC = (): JSX.Element => {
+  const { events, setActiveEvent } = useCalendarStore();
+  const { openDateModal } = useUiStore();
+
   const [lastView, setLastView] = useState<View>(
     (localStorage.getItem("lastView") as View) || "week"
   );
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
-
   const onDoubleClick = (event: any) => {
-    //console.log({ doubleClick: event });
+    openDateModal();
   };
 
-  const onSelec = (event: any) => {
-    //console.log({ click: event });
-    setIsOpen(true);
+  const onSelec = (event: CalendarEvent) => {
+    setActiveEvent(event);
   };
 
   const onViewChange = (view: View) => {
     localStorage.setItem("lastView", view);
     setLastView(view);
   };
+
+
+
 
   return (
     <>
@@ -83,7 +69,7 @@ export const CalendarPage: FC = (): JSX.Element => {
           p: 2,
         }}
       >
-        <Calendar
+        {/* <Calendar
           culture="es"
           localizer={localizer}
           events={events}
@@ -94,14 +80,15 @@ export const CalendarPage: FC = (): JSX.Element => {
           messages={getMessagesEs()}
           eventPropGetter={eventStyleGetter}
           components={{
-            event: CalendarEvent,
+            event: CalendarEventComp,
           }}
           onDoubleClickEvent={onDoubleClick}
           onSelectEvent={onSelec}
           onView={onViewChange}
-        />
+        /> */}
       </Box>
-      <CalendarModal isOpen={isOpen} handleClose={handleClose} />
+      <CalendarModal />
+      <Fab />
     </>
   );
 };

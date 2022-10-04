@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect, forwardRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -11,25 +11,20 @@ import {
   Alert,
 } from "@mui/material";
 import { Save } from "@mui/icons-material";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { addHours, differenceInSeconds } from "date-fns";
+import { addHours } from "date-fns";
 import { FormikProps, useFormik } from "formik";
 import * as Yup from "yup";
 import "dayjs/locale/es";
+import { useCalendarStore, useUiStore } from "../../hooks";
+import { ModalForm } from "../../auth/interafces";
+import { TransitionProps } from "@mui/material/transitions";
 
-type props = {
-  isOpen: boolean;
-  handleClose: () => void;
-};
-
-const initialValues = {
-  start: new Date(),
-  end: addHours(new Date(), 1),
+const initialValues: ModalForm = {
+  start: new Date().toDateString(),
+  end: addHours(new Date(), 1).toDateString(),
   title: "",
   notes: "",
 };
@@ -45,56 +40,50 @@ const formValidations = {
     .max(100, "Máximo 100 caracteres."),
 };
 
-export const CalendarModal: FC<props> = ({
-  isOpen,
-  handleClose,
-}): JSX.Element => {
+export const CalendarModal: FC = (): JSX.Element => {
   const [errorMessage, setErrorMessage] = useState("");
 
-  const onSubmit = (values: typeof initialValues) => {
-    //console.log(values);
+  const { isDateModalOpen, closeDateModal } = useUiStore();
+  const { activeEvent, startSavingEvent, setActiveEvent } = useCalendarStore();
 
-    console.log(formik.values.start);
-    console.log(formik.values.end);
+  const onSubmit = async (values: ModalForm) => {
+    console.log(values);
 
-    // const difference = differenceInSeconds(
-    //   formik.values.end,
-    //   formik.values.start
-    // );
+    await startSavingEvent({
+      ...formik.values,
+      bgColor: "",
+      user: {
+        _id: 123,
+        name: "carlos",
+      },
+    });
 
-    // console.log("llega");
-    // setErrorMessage("");
-    // console.log({ difference });
-    // console.log({ errorMessage });
-    // if (isNaN(difference) || difference <= 0) {
-    //   setErrorMessage(
-    //     "Error en las fechas, la fecha de finalización no puede ser menor o igual a la fecha de inicio."
-    //   );
-    //   // console.log(errorMessage);
-    //   return;
-    // }
-
-    //formik.resetForm();
-    //handleClose();
+    formik.resetForm();
+    closeDateModal();
   };
 
-  const formik: FormikProps<typeof initialValues> = useFormik<
-    typeof initialValues
-  >({
+  const formik: FormikProps<ModalForm> = useFormik<ModalForm>({
     initialValues,
     validationSchema: Yup.object(formValidations),
     onSubmit,
   });
 
-  const handleDateChange = (value: Date | null, target: string) => {
-    console.log({value});
-    formik.setFieldValue(target, value, true);
+  const handleDateChange = (value: any | null, target: string) => {
+    formik.setFieldValue(target, value.$d);
+    // dateValidator();
   };
+
+  useEffect(() => {
+    if (activeEvent) formik.setValues({ ...activeEvent });
+  }, [activeEvent]);
 
   return (
     <Dialog
-      open={isOpen}
-      onClose={handleClose}
+      open={isDateModalOpen}
+      onClose={() => {
+        closeDateModal();
+        setActiveEvent(null);
+      }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
@@ -169,10 +158,19 @@ export const CalendarModal: FC<props> = ({
         <DialogActions>
           <Box>
             {errorMessage.length > 0 && (
-              <Alert severity="error">{errorMessage}</Alert>
+              <Alert sx={{ marginX: 2 }} severity="error">
+                {errorMessage}
+              </Alert>
             )}
-
-            <Button type="submit" startIcon={<Save />} variant="outlined">
+            <Button
+              sx={{ marginX: 2 }}
+              disabled={
+                errorMessage.length > 0 || !formik.isValid || !formik.dirty
+              }
+              type="submit"
+              startIcon={<Save />}
+              variant="outlined"
+            >
               Guardar
             </Button>
           </Box>
