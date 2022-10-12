@@ -18,13 +18,13 @@ import { addHours } from "date-fns";
 import { FormikProps, useFormik } from "formik";
 import * as Yup from "yup";
 import "dayjs/locale/es";
-import { useCalendarStore, useUiStore } from "../../hooks";
+import { useAuthStore, useCalendarStore, useUiStore } from "../../hooks";
 import { ModalForm } from "../../auth/interafces";
 import { TransitionProps } from "@mui/material/transitions";
 
 const initialValues: ModalForm = {
-  start: new Date().toDateString(),
-  end: addHours(new Date(), 1).toDateString(),
+  start: new Date(),
+  end: addHours(new Date(), 1),
   title: "",
   notes: "",
 };
@@ -43,6 +43,7 @@ const formValidations = {
 export const CalendarModal: FC = (): JSX.Element => {
   const [errorMessage, setErrorMessage] = useState("");
 
+  const { user } = useAuthStore();
   const { isDateModalOpen, closeDateModal } = useUiStore();
   const { activeEvent, startSavingEvent, setActiveEvent } = useCalendarStore();
 
@@ -52,10 +53,7 @@ export const CalendarModal: FC = (): JSX.Element => {
     await startSavingEvent({
       ...formik.values,
       bgColor: "",
-      user: {
-        _id: 123,
-        name: "carlos",
-      },
+      user,
     });
 
     formik.resetForm();

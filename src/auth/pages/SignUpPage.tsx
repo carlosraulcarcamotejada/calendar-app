@@ -10,6 +10,8 @@ import { AuthLayout, SignUpValues } from "../";
 import { FormikProps, useFormik } from "formik";
 import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
+import { useAuthStore } from "../../hooks";
+import { Alert } from "@mui/material";
 
 const initialValues: SignUpValues = {
   email: "",
@@ -50,9 +52,11 @@ const formValidations = {
 };
 
 export const SignUpPage: FC = (): JSX.Element => {
+  const { startSingUp, isError, errorMessage } = useAuthStore();
+
   const onSubmit = (values: SignUpValues) => {
-    console.log(values);
-    formik.resetForm();
+    startSingUp(values);
+    //formik.resetForm();
   };
 
   const formik: FormikProps<SignUpValues> = useFormik<SignUpValues>({
@@ -150,13 +154,14 @@ export const SignUpPage: FC = (): JSX.Element => {
               }
             />
           </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive inspiration, marketing promotions and updates via email."
-            />
-          </Grid>
         </Grid>
+
+        {isError && (
+          <Alert sx={{ marginTop: 2 }} severity="error">
+            {errorMessage}
+          </Alert>
+        )}
+
         <Button
           type="submit"
           fullWidth

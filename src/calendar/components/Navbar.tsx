@@ -11,10 +11,10 @@ import {
   MenuItem,
 } from "@mui/material";
 import { CalendarMonthOutlined, LogoutOutlined } from "@mui/icons-material";
-
+import { useAuthStore } from "../../hooks";
 
 export const NavBar: FC = (): JSX.Element => {
-  const onLogout = () => {console.log('saliendo')};
+  const { startLogout, user } = useAuthStore();
 
   return (
     <AppBar position="fixed">
@@ -28,11 +28,16 @@ export const NavBar: FC = (): JSX.Element => {
           alignItems="center"
         >
           <Typography variant="h6" noWrap component="div">
-            Usuario
+            {`${user.name || ""} ${user.lastname || ""}`}
           </Typography>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Button variant="outlined" color="inherit" onClick={onLogout} startIcon={<LogoutOutlined />}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={startLogout}
+              startIcon={<LogoutOutlined />}
+            >
               Salir
             </Button>
           </Box>

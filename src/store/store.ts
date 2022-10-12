@@ -1,14 +1,18 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import authSlice from "./auth/authSlice";
 import calendarSlice from "./calendar/calendarSlice";
 import uiSlice from "./ui/uiSlice";
 
 export const store = configureStore({
   reducer: {
-    ui: uiSlice,
+    auth: authSlice,
     calendar: calendarSlice,
-    auth:authSlice,
+    ui: uiSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

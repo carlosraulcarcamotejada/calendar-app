@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
+import { calendarApi } from "../api";
 import {
   CalendarEvent,
   onAddNewEvent,
@@ -19,13 +20,19 @@ export const useCalendarStore = () => {
   };
 
   const startSavingEvent = async (calendaEvent: CalendarEvent) => {
-    if (!calendaEvent._id) {
-      // if there isn't an event, it will create one
-      dispatch(onAddNewEvent({ _id: new Date().getTime(), ...calendaEvent }));
-    } else {
-      //For update an existing event
-      dispatch(onUpdateEvent({ ...calendaEvent }));
-    }
+    try {
+      if (!calendaEvent._id) {
+        // if there isn't an event, it will create one
+
+        const { data } = await calendarApi.post("/events", { ...calendaEvent });
+        console.log({ data });
+
+        dispatch(onAddNewEvent({ ...data.savedEvent }));
+      } else {
+        //For update an existing event
+        dispatch(onUpdateEvent({ ...calendaEvent }));
+      }
+    } catch (error) {}
   };
 
   const startDeletingEvent = async () => {
@@ -36,6 +43,7 @@ export const useCalendarStore = () => {
     //Properties
     events,
     activeEvent,
+    hasEventSelected: !!activeEvent,
     //Methods
     setActiveEvent,
     startSavingEvent,

@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { Calendar } from "react-big-calendar";
-// import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Box, Toolbar } from "@mui/material";
 import { localizer, getMessagesEs } from "../../helpers";
 import { NavBar, CalendarModal, Fab, CalendarEvent as CalendarEventComp } from "..";
@@ -69,7 +69,7 @@ export const CalendarPage: FC = (): JSX.Element => {
           p: 2,
         }}
       >
-        {/* <Calendar
+        <Calendar
           culture="es"
           localizer={localizer}
           events={events}
@@ -85,7 +85,7 @@ export const CalendarPage: FC = (): JSX.Element => {
           onDoubleClickEvent={onDoubleClick}
           onSelectEvent={onSelec}
           onView={onViewChange}
-        /> */}
+        />
       </Box>
       <CalendarModal />
       <Fab />

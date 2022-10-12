@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "..";
+import { RootState, User } from "..";
 import { addHours } from "date-fns";
 
 // Define a type for the slice state
@@ -9,13 +9,10 @@ export interface CalendarEvent {
   _id?: number;
   title: string;
   notes: string;
-  start: string;
-  end: string;
+  start: Date;
+  end: Date;
   bgColor: string;
-  user: {
-    _id: number;
-    name: string;
-  };
+  user: User;
 }
 
 interface Calendar {
@@ -30,12 +27,14 @@ const initialState: Calendar = {
       _id: new Date().getTime(),
       title: "Cumpleaños del jefe",
       notes: "Hay que comprar el pastel.",
-      start: new Date().toDateString(),
-      end: addHours(new Date(), 2).toDateString(),
+      start: new Date(),
+      end: addHours(new Date(), 2),
       bgColor: "#fafafa",
       user: {
         _id: 123,
         name: "Carlos",
+        lastname: "Carcamo",
+        email: "carlos@gmail.com",
       },
     },
   ],

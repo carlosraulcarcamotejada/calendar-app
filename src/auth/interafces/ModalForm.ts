@@ -1,6 +1,6 @@
 export interface ModalForm {
-    start: string,
-    end: string,
+    start: Date,
+    end: Date,
     title: string, 
     notes: string,
 }

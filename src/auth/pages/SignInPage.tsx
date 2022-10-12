@@ -1,28 +1,39 @@
 import { FC } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { AuthLayout, SignInValues } from "../";
 import { FormikProps, useFormik } from "formik";
 import { Link as RouterLink } from "react-router-dom";
+import * as Yup from "yup";
+import { useAuthStore } from "../../hooks";
+import { Alert } from "@mui/material";
 
 const initialValues: SignInValues = {
   email: "",
   password: "",
 };
 
+const formValidations = {
+  email: Yup.string()
+    .email("Debe ser un email válido.")
+    .required("Correo es requerido."),
+  password: Yup.string().required("Contraseña es requerida."),
+};
+
 export const SignInPage: FC = (): JSX.Element => {
+  const { startLogin, isError, errorMessage } = useAuthStore();
+
   const onSubmit = (values: SignInValues) => {
-    console.log(values);
-    formik.resetForm();
+    startLogin(values);
+    //formik.resetForm();
   };
 
   const formik: FormikProps<SignInValues> = useFormik<SignInValues>({
     initialValues,
+    validationSchema: Yup.object(formValidations),
     onSubmit,
   });
 
@@ -39,6 +50,11 @@ export const SignInPage: FC = (): JSX.Element => {
           onChange={formik.handleChange}
           autoComplete="email"
           autoFocus
+          onBlur={formik.handleBlur}
+          error={!!formik.errors.email && formik.touched.email}
+          helperText={
+            !!formik.errors.email && formik.touched.email && formik.errors.email
+          }
         />
         <TextField
           margin="normal"
@@ -50,11 +66,16 @@ export const SignInPage: FC = (): JSX.Element => {
           label="Contraseña"
           type="password"
           autoComplete="current-password"
+          onBlur={formik.handleBlur}
+          error={!!formik.errors.password && formik.touched.password}
+          helperText={
+            !!formik.errors.password &&
+            formik.touched.password &&
+            formik.errors.password
+          }
         />
-        <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
-          label="Remember me"
-        />
+        {isError && <Alert sx={{marginTop:2}} severity="error">{errorMessage}</Alert>}
+
         <Button
           type="submit"
           fullWidth
@@ -64,11 +85,6 @@ export const SignInPage: FC = (): JSX.Element => {
           Iniciar sesion
         </Button>
         <Grid container>
-          <Grid item xs display="none">
-            <Link href="#" variant="body2">
-              Forgot password?
-            </Link>
-          </Grid>
           <Grid item>
             <Link component={RouterLink} to="/auth/signup" variant="body2">
               ¿No tienes una cuenta? Inscribirse

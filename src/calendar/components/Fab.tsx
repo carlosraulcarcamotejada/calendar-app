@@ -15,19 +15,16 @@ export const Fab: FC = (): JSX.Element => {
     exit: theme.transitions.duration.leavingScreen,
   };
 
-
-  
-
   const { openDateModal, closeDateModal, isDateModalOpen } = useUiStore();
-  const { setActiveEvent, activeEvent, startDeletingEvent } =
+  const { setActiveEvent, hasEventSelected, startDeletingEvent, activeEvent } =
     useCalendarStore();
 
   const handleClickNew = () => {
     setActiveEvent({
       title: "",
       notes: "",
-      start: new Date().toDateString(),
-      end: addHours(new Date(), 2).toDateString(),
+      start: new Date(),
+      end: addHours(new Date(), 2),
       bgColor: "#fafafa",
       user: {
         _id: 123,
@@ -44,16 +41,14 @@ export const Fab: FC = (): JSX.Element => {
 
   return (
     <>
-      {activeEvent?._id && isDateModalOpen ? (
+      {!!activeEvent?._id && isDateModalOpen ? (
         <Zoom
-          key="error"
-          in={activeEvent?._id !== undefined && isDateModalOpen}
+          key="delete"
+          in={hasEventSelected && isDateModalOpen}
           timeout={transitionDuration}
           style={{
             transitionDelay: `${
-              activeEvent?._id !== undefined && isDateModalOpen
-                ? transitionDuration.exit
-                : 0
+              hasEventSelected && isDateModalOpen ? transitionDuration.exit : 0
             }ms`,
           }}
           unmountOnExit
@@ -62,7 +57,7 @@ export const Fab: FC = (): JSX.Element => {
             sx={{
               position: "fixed",
               bottom: 16,
-              right: 64,
+              right: 16,
               zIndex: 9999,
             }}
             color="error"
@@ -74,12 +69,12 @@ export const Fab: FC = (): JSX.Element => {
         </Zoom>
       ) : (
         <Zoom
-          key="error"
-          in={activeEvent === null && !isDateModalOpen}
+          key="add"
+          in={!hasEventSelected && !isDateModalOpen}
           timeout={transitionDuration}
           style={{
             transitionDelay: `${
-              activeEvent === null && !isDateModalOpen
+              !hasEventSelected && !isDateModalOpen
                 ? transitionDuration.exit
                 : 0
             }ms`,
