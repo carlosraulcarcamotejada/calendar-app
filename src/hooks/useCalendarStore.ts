@@ -1,9 +1,11 @@
+import { parseISO } from "date-fns";
 import { useSelector, useDispatch } from "react-redux";
 import { calendarApi } from "../api";
 import {
   CalendarEvent,
   onAddNewEvent,
   onDeleteEvent,
+  onLoadEvents,
   onSetActiveEvent,
   onUpdateEvent,
   RootState,
@@ -22,21 +24,49 @@ export const useCalendarStore = () => {
   const startSavingEvent = async (calendaEvent: CalendarEvent) => {
     try {
       if (!calendaEvent._id) {
-        // if there isn't an event, it will create one
-
+        //Creating
         const { data } = await calendarApi.post("/events", { ...calendaEvent });
-        console.log({ data });
-
         dispatch(onAddNewEvent({ ...data.savedEvent }));
       } else {
-        //For update an existing event
-        dispatch(onUpdateEvent({ ...calendaEvent }));
+        //Updating
+        const { data } = await calendarApi.put(`/events/${calendaEvent._id}`, {
+          ...calendaEvent,
+        });
+
+        dispatch(onUpdateEvent({ ...data.updatedEvent }));
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const startDeletingEvent = async () => {
-    dispatch(onDeleteEvent());
+    try {
+      if (activeEvent?._id) {
+
+        const {data} = await calendarApi.delete(`/events/${activeEvent?._id}`);
+
+        dispatch(onDeleteEvent(data.deletedEvent._id));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const startLoadingEvents = async () => {
+    try {
+      const { data } = await calendarApi.get("/events");
+
+      const events: CalendarEvent[] = data.events.map((event: any) => {
+        event.start = parseISO(event.start);
+        event.end = parseISO(event.end);
+        return event;
+      });
+
+      dispatch(onLoadEvents(events));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return {
@@ -46,6 +76,7 @@ export const useCalendarStore = () => {
     hasEventSelected: !!activeEvent,
     //Methods
     setActiveEvent,
+    startLoadingEvents,
     startSavingEvent,
     startDeletingEvent,
   };

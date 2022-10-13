@@ -17,27 +17,14 @@ export interface CalendarEvent {
 
 interface Calendar {
   events: CalendarEvent[];
+  isLoadingEvents: boolean;
   activeEvent: CalendarEvent | null;
 }
 
 // Define the initial state using that type
 const initialState: Calendar = {
-  events: [
-    {
-      _id: new Date().getTime(),
-      title: "Cumpleaños del jefe",
-      notes: "Hay que comprar el pastel.",
-      start: new Date(),
-      end: addHours(new Date(), 2),
-      bgColor: "#fafafa",
-      user: {
-        _id: 123,
-        name: "Carlos",
-        lastname: "Carcamo",
-        email: "carlos@gmail.com",
-      },
-    },
-  ],
+  events: [],
+  isLoadingEvents: true,
   activeEvent: null,
 };
 
@@ -61,18 +48,40 @@ export const calendarSlice = createSlice({
         return event;
       });
     },
-    onDeleteEvent: (state) => {
-      if (state.activeEvent) {
-        state.events = state.events.filter(
-          (event) => event._id !== state.activeEvent?._id
+    onDeleteEvent: (state, action: PayloadAction<number>) => {
+      state.events = state.events.filter(
+        (event) => event._id !== action.payload
+      );
+      state.activeEvent = null;
+    },
+    onLoadEvents: (state, action: PayloadAction<CalendarEvent[]>) => {
+      state.isLoadingEvents = false;
+
+      action.payload.forEach((event) => {
+        const exists = state.events.some(
+          (dbEvent) => dbEvent._id === event._id
         );
-        state.activeEvent = null;
-      }
+
+        if (!exists) {
+          state.events.push(event);
+        }
+      });
+    },
+    onLogoutCalendar: (state) => {
+      state.isLoadingEvents = true;
+      state.events = [];
+      state.activeEvent = null;
     },
   },
 });
 
-export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } =
-  calendarSlice.actions;
+export const {
+  onSetActiveEvent,
+  onAddNewEvent,
+  onUpdateEvent,
+  onDeleteEvent,
+  onLoadEvents,
+  onLogoutCalendar,
+} = calendarSlice.actions;
 
 export default calendarSlice.reducer;

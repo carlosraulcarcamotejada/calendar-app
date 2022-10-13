@@ -11,7 +11,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { CalendarMonthOutlined, LogoutOutlined } from "@mui/icons-material";
-import { useAuthStore } from "../../hooks";
+import { useAuthStore, useCalendarStore } from "../../hooks";
 
 export const NavBar: FC = (): JSX.Element => {
   const { startLogout, user } = useAuthStore();

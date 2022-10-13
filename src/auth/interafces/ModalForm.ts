@@ -3,4 +3,5 @@ export interface ModalForm {
     end: Date,
     title: string, 
     notes: string,
+    bgColor: string,
 }

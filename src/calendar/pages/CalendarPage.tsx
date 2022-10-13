@@ -1,40 +1,48 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { Calendar } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Box, Toolbar } from "@mui/material";
 import { localizer, getMessagesEs } from "../../helpers";
-import { NavBar, CalendarModal, Fab, CalendarEvent as CalendarEventComp } from "..";
-import { useCalendarStore, useUiStore } from "../../hooks";
+import {
+  NavBar,
+  CalendarModal,
+  Fab,
+  CalendarEvent as CalendarEventComp,
+} from "..";
+import { useAuthStore, useCalendarStore, useUiStore } from "../../hooks";
 import { CalendarEvent } from "../../store/calendar/calendarSlice";
 
-
-type StyleProps = {
-  title: string;
-  notes: string;
-  start: Date;
-  end: Date;
-  bgColor: string;
-  user: { _id: number; name: string };
-};
-
-const eventStyleGetter = (e: StyleProps) => {
-  const style = {
-    backgroundColor: "#347CF7",
-    borderRadius: "0px",
-    opacity: 0.8,
-    color: "white",
-  };
-
-  return {
-    style,
-  };
-};
-
-type View = "agenda" | "day" | "month" | "week" | "work_week";
-
 export const CalendarPage: FC = (): JSX.Element => {
-  const { events, setActiveEvent } = useCalendarStore();
+  const { user } = useAuthStore();
+  const { events, setActiveEvent, startLoadingEvents } = useCalendarStore();
   const { openDateModal } = useUiStore();
+
+  type StyleProps = {
+    title: string;
+    notes: string;
+    start: Date;
+    end: Date;
+    bgColor: string;
+    user: number;
+  };
+
+  const eventStyleGetter = (event: StyleProps) => {
+ 
+    const isMyEvent = user._id === event.user;
+
+    const style = {
+      backgroundColor: isMyEvent ? "#347CF7" : "#465660",
+      borderRadius: "0px",
+      opacity: 0.8,
+      color: "white",
+    };
+
+    return {
+      style,
+    };
+  };
+
+  type View = "agenda" | "day" | "month" | "week" | "work_week";
 
   const [lastView, setLastView] = useState<View>(
     (localStorage.getItem("lastView") as View) || "week"
@@ -53,8 +61,9 @@ export const CalendarPage: FC = (): JSX.Element => {
     setLastView(view);
   };
 
-
-
+  useEffect(() => {
+    startLoadingEvents();
+  }, []);
 
   return (
     <>

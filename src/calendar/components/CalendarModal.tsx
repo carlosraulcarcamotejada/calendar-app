@@ -27,6 +27,7 @@ const initialValues: ModalForm = {
   end: addHours(new Date(), 1),
   title: "",
   notes: "",
+  bgColor: "",
 };
 
 const formValidations = {
@@ -48,15 +49,14 @@ export const CalendarModal: FC = (): JSX.Element => {
   const { activeEvent, startSavingEvent, setActiveEvent } = useCalendarStore();
 
   const onSubmit = async (values: ModalForm) => {
-    console.log(values);
 
     await startSavingEvent({
-      ...formik.values,
-      bgColor: "",
+      ...values,
       user,
     });
 
     formik.resetForm();
+    setActiveEvent(null);
     closeDateModal();
   };
 
@@ -68,7 +68,6 @@ export const CalendarModal: FC = (): JSX.Element => {
 
   const handleDateChange = (value: any | null, target: string) => {
     formik.setFieldValue(target, value.$d);
-    // dateValidator();
   };
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Fab as FavMUI } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useCalendarStore, useUiStore } from "../../hooks";
+import { useAuthStore, useCalendarStore, useUiStore } from "../../hooks";
 import { addHours } from "date-fns";
 import Zoom from "@mui/material/Zoom";
 import { useTheme } from "@mui/material/styles";
@@ -15,6 +15,7 @@ export const Fab: FC = (): JSX.Element => {
     exit: theme.transitions.duration.leavingScreen,
   };
 
+  const { user } = useAuthStore();
   const { openDateModal, closeDateModal, isDateModalOpen } = useUiStore();
   const { setActiveEvent, hasEventSelected, startDeletingEvent, activeEvent } =
     useCalendarStore();
@@ -26,10 +27,7 @@ export const Fab: FC = (): JSX.Element => {
       start: new Date(),
       end: addHours(new Date(), 2),
       bgColor: "#fafafa",
-      user: {
-        _id: 123,
-        name: "Carlos",
-      },
+      user,
     });
     openDateModal();
   };

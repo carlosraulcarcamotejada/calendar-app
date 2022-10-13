@@ -7,6 +7,7 @@ import {
   onChecking,
   onLogin,
   onLogout,
+  onLogoutCalendar,
   RootState,
 } from "../store";
 
@@ -82,6 +83,7 @@ export const useAuthStore = () => {
   const startLogout = () => {
     localStorage.setItem("token", "");
     localStorage.setItem("token-init-date", "");
+    dispatch(onLogoutCalendar());
     dispatch(onLogout(null));
   };
 
