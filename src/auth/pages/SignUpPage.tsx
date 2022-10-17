@@ -25,12 +25,12 @@ const formValidations = {
   name: Yup.string()
     .min(3, "Mínimo 3 caracteres.")
     .max(40, "Máximo 40 caracteres.")
-    .matches(/^[aA-zZ\s]+$/, "Sólo se permiten letras para el nombre.")
+    .matches(/^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi, "Sólo se permiten letras para el nombre.")
     .required("Nombre es requerido."),
   lastname: Yup.string()
     .min(3, "Mínimo 3 caracteres.")
     .max(40, "Máximo 40 caracteres.")
-    .matches(/^[aA-zZ\s]+$/, "Sólo se permiten letras para el nombre.")
+    .matches(/^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/gi, "Sólo se permiten letras para el apellido.")
     .required("Apellido es requerido."),
   email: Yup.string()
     .email("Debe ser un email válido.")
@@ -41,7 +41,7 @@ const formValidations = {
     .required("Contraseña es requerida.")
     .matches(
       /^[0-9A-Za-z]*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?][0-9a-zA-Z]*$/,
-      "Debe contener al menos un caracter especial"
+      "Debe contener al menos un caracter especial."
     )
     .matches(/^(?=.*[A-Z])/, "Debe contener al menos un carácter en mayúscula.")
     .matches(/^(?=.*[a-z])/, "Debe contener al menos un carácter en Minúscula.")

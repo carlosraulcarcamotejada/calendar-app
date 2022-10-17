@@ -12,20 +12,16 @@ import { useAuthStore } from "../../hooks";
 import { Alert } from "@mui/material";
 
 const initialValues: SignInValues = {
-  email: "carlosraulcarcamotejada@gmail.com",
-  password: "Bunbury88$",
+  email: "",
+  password: "",
 };
 
 const formValidations = {
-  email: Yup.string()
-    .email("Debe ser un email válido.")
-    .required("Correo es requerido."),
+  email: Yup.string().required("Correo es requerido.").email("Debe ser un email válido"),
   password: Yup.string().required("Contraseña es requerida."),
 };
 
 export const SignInPage: FC = (): JSX.Element => {
-
-
   const { startLogin, isError, errorMessage } = useAuthStore();
 
   const onSubmit = (values: SignInValues) => {
@@ -76,7 +72,11 @@ export const SignInPage: FC = (): JSX.Element => {
             formik.errors.password
           }
         />
-        {isError && <Alert sx={{marginTop:2}} severity="error">{errorMessage}</Alert>}
+        {isError && (
+          <Alert sx={{ marginTop: 2 }} severity="error">
+            {errorMessage}
+          </Alert>
+        )}
 
         <Button
           type="submit"

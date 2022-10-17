@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { SignInPage } from "../auth";
+import { SignInPage, SignUpPage } from "../auth";
 import { AuthRoutes } from "../auth/routes/AuthRoutes";
 import { CalendarPage } from "../calendar";
 import { useAuthStore } from "../hooks";
@@ -20,8 +20,9 @@ export const AppRouter: FC = (): JSX.Element => {
     <Routes>
       {status === "not-authenticated" ? (
         <>
-          <Route path="/auth/*" element={<SignInPage />} />
-          <Route path="/*" element={<Navigate to="/auth/login" />} />
+          <Route path="/auth/signin" element={<SignInPage />} />
+          <Route path="/auth/signup" element={<SignUpPage />} />
+          <Route path="/*" element={<Navigate to="/auth/signin" />} />
         </>
       ) : (
         <>
