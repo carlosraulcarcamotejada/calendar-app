@@ -1,12 +1,10 @@
 import { FC, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { SignInPage, SignUpPage } from "../auth";
-import { AuthRoutes } from "../auth/routes/AuthRoutes";
 import { CalendarPage } from "../calendar";
 import { useAuthStore } from "../hooks";
 
 export const AppRouter: FC = (): JSX.Element => {
-  const authStatus = "authenticated";
 
   const { checkAuthToken, status } = useAuthStore();
 

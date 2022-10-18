@@ -12,8 +12,8 @@ import { useAuthStore } from "../../hooks";
 import { Alert } from "@mui/material";
 
 const initialValues: SignInValues = {
-  email: "",
-  password: "",
+  email: "carlosraulcarcamotejada@gmail.com",
+  password: "Bunbury88$",
 };
 
 const formValidations = {
@@ -24,8 +24,8 @@ const formValidations = {
 export const SignInPage: FC = (): JSX.Element => {
   const { startLogin, isError, errorMessage } = useAuthStore();
 
-  const onSubmit = (values: SignInValues) => {
-    startLogin(values);
+  const onSubmit = async (values: SignInValues) => {
+    await startLogin(values);
     //formik.resetForm();
   };
 

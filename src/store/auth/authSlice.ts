@@ -6,9 +6,9 @@ import { RootState } from "..";
 
 export interface User {
   _id: number;
+  email: string;
   name: string;
   lastname: string;
-  email: string;
 }
 
 interface Auth {
@@ -16,6 +16,7 @@ interface Auth {
   errorMessage: string | null;
   user: User;
 }
+
 
 // Define the initial state using that type
 const initialState: Auth = {

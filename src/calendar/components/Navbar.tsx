@@ -5,13 +5,10 @@ import {
   Grid,
   Toolbar,
   Typography,
-  Avatar,
   Button,
-  Menu,
-  MenuItem,
 } from "@mui/material";
 import { CalendarMonthOutlined, LogoutOutlined } from "@mui/icons-material";
-import { useAuthStore, useCalendarStore } from "../../hooks";
+import { useAuthStore } from "../../hooks";
 
 export const NavBar: FC = (): JSX.Element => {
   const { startLogout, user } = useAuthStore();
@@ -28,7 +25,7 @@ export const NavBar: FC = (): JSX.Element => {
           alignItems="center"
         >
           <Typography variant="h6" noWrap component="div">
-            {`${user.name || ""} ${user.lastname || ""}`}
+            {`${user.name || ""}`}
           </Typography>
 
           <Box sx={{ flexGrow: 0 }}>
