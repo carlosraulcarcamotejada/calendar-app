@@ -50,7 +50,7 @@ const Copyright: FC = (): JSX.Element => {
       align="center"
       sx={{ mt: 8, mb: 4 }}
     >
-      {"Copyright © "}
+      {"Copyright © Carlos Cárcamo "}
       <Link color="inherit" href="https://mui.com/">
        {"Calendar App "}
       </Link>
