@@ -12,8 +12,8 @@ import { useAuthStore } from "../../hooks";
 import { Alert } from "@mui/material";
 
 const initialValues: SignInValues = {
-  email: "carlosraulcarcamotejada@gmail.com",
-  password: "Bunbury88$",
+  email: "",
+  password: "",
 };
 
 const formValidations = {
